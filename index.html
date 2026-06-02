@@ -593,6 +593,7 @@
     <li><a href="#skills">スキル</a></li>
     <li><a href="#works">実績</a></li>
     <li><a href="#pricing">料金</a></li>
+    <li><a href="#updates">最新情報</a></li>
     <li><a href="#contact">お問い合わせ</a></li>
   </ul>
 </nav>
@@ -765,6 +766,39 @@
     </div>
   </section>
 
+  <section id="updates">
+    <div class="container">
+      <div class="section-label fade-up">Updates</div>
+      <h2 class="section-title fade-up">最新情報</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px;" class="fade-up">
+
+        <!-- Xタイムライン -->
+        <div>
+          <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">𝕏 Latest Posts</p>
+          <a class="twitter-timeline"
+            data-theme="light"
+            data-chrome="noheader nofooter noborders"
+            data-tweet-limit="3"
+            data-height="420"
+            href="https://twitter.com/TM_automation4">
+          </a>
+          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+        <!-- はてなブログRSS -->
+        <div>
+          <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">📝 Latest Blog Posts</p>
+          <div id="blog-feed" style="display:flex; flex-direction:column; gap:8px;">
+            <p style="font-size:0.85rem; color:var(--text-dim);">読み込み中...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <section id="contact" class="contact-section">
     <div class="section-label fade-up" style="justify-content:center;">Contact</div>
     <h2 class="contact-title fade-up">まずは気軽に<br>相談してください</h2>
@@ -772,9 +806,14 @@
       「こんなこと自動化できる？」「ちょっと聞きたいだけ」でも全然OKです。<br>
       専門用語なしで、わかりやすく説明します。
     </p>
+    <div class="fade-up" style="margin-bottom:16px;">
+      <p style="font-size:0.8rem; color:var(--orange); background:#fff7ed; border:1px solid rgba(249,115,22,0.3); border-radius:99px; display:inline-block; padding:6px 18px; letter-spacing:0.05em;">
+        👋 まずはXのDMが一番気軽でおすすめです！
+      </p>
+    </div>
     <div class="contact-links fade-up">
-      <a href="https://coconala.com/users/5892018" target="_blank" class="btn btn-contact-primary">ココナラで相談する →</a>
-      <a href="https://twitter.com/TM_automation4" target="_blank" class="btn btn-contact-outline">X（旧Twitter）でDM</a>
+      <a href="https://twitter.com/TM_automation4" target="_blank" class="btn btn-contact-primary">X（旧Twitter）でDM ←おすすめ</a>
+      <a href="https://coconala.com/users/5892018" target="_blank" class="btn btn-contact-outline">ococナラで相談する →</a>
     </div>
   </section>
 
@@ -793,6 +832,45 @@
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // はてなブログRSS取得
+  const feedUrl = 'https://nisa-sp500.hatenablog.com/rss';
+  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=5`;
+
+  fetch(apiUrl)
+    .then(r => r.json())
+    .then(data => {
+      const container = document.getElementById('blog-feed');
+      if (!data.items || data.items.length === 0) {
+        container.innerHTML = '<p style="font-size:0.85rem; color:var(--text-dim);">記事が見つかりません</p>';
+        return;
+      }
+      container.innerHTML = data.items.map(item => {
+        const date = new Date(item.pubDate).toLocaleDateString('ja-JP', {year:'numeric', month:'short', day:'numeric'});
+        return `
+          <a href="${item.link}" target="_blank" style="display:block; background:#fff; border:1px solid var(--border); border-radius:8px; padding:14px 16px; text-decoration:none; transition:all 0.3s;">
+            <p style="font-size:13px; color:var(--text-dim); margin-bottom:4px;">${date}</p>
+            <p style="font-size:14px; font-weight:500; color:var(--text); line-height:1.5;">${item.title}</p>
+          </a>`;
+      }).join('');
+
+      // ホバーエフェクト
+      container.querySelectorAll('a').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          el.style.borderColor = 'var(--orange)';
+          el.style.transform = 'translateX(4px)';
+          el.style.boxShadow = '0 4px 20px rgba(249,115,22,0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.borderColor = 'var(--border)';
+          el.style.transform = 'translateX(0)';
+          el.style.boxShadow = 'none';
+        });
+      });
+    })
+    .catch(() => {
+      document.getElementById('blog-feed').innerHTML = '<p style="font-size:0.85rem; color:var(--text-dim);">記事を読み込めませんでした</p>';
+    });
 </script>
 </body>
 </html>
