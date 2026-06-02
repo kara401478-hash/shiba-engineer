@@ -817,7 +817,7 @@
 
   // はてなブログRSS取得
   const feedUrl = 'https://nisa-sp500.hatenablog.com/rss';
-  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&api_key=&count=5&order_by=pubDate`;
+  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=5`;
 
   fetch(apiUrl)
     .then(r => r.json())
