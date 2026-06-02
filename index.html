@@ -770,29 +770,11 @@
     <div class="container">
       <div class="section-label fade-up">Updates</div>
       <h2 class="section-title fade-up">最新情報</h2>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px;" class="fade-up">
-
-        <!-- Xタイムライン -->
-        <div>
-          <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">𝕏 Latest Posts</p>
-          <a class="twitter-timeline"
-            data-theme="light"
-            data-chrome="noheader nofooter noborders"
-            data-tweet-limit="3"
-            data-height="420"
-            href="https://twitter.com/TM_automation4">
-          </a>
-          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      <div class="fade-up">
+        <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">📝 Latest Blog Posts</p>
+        <div id="blog-feed" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:8px;">
+          <p style="font-size:0.85rem; color:var(--text-dim);">読み込み中...</p>
         </div>
-
-        <!-- はてなブログRSS -->
-        <div>
-          <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">📝 Latest Blog Posts</p>
-          <div id="blog-feed" style="display:flex; flex-direction:column; gap:8px;">
-            <p style="font-size:0.85rem; color:var(--text-dim);">読み込み中...</p>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -835,15 +817,13 @@
 
   // はてなブログRSS取得
   const feedUrl = 'https://nisa-sp500.hatenablog.com/rss';
-  const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`;
+  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&api_key=&count=5&order_by=pubDate`;
 
   fetch(apiUrl)
     .then(r => r.json())
     .then(data => {
       const container = document.getElementById('blog-feed');
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(data.contents, 'text/xml');
-      const items = Array.from(xml.querySelectorAll('item')).slice(0, 5);
+      const items = data.items || [];
 
       if (!items.length) {
         container.innerHTML = '<p style="font-size:0.85rem; color:var(--text-dim);">記事が見つかりません</p>';
@@ -851,14 +831,11 @@
       }
 
       container.innerHTML = items.map(item => {
-        const title = item.querySelector('title')?.textContent || '';
-        const link = item.querySelector('link')?.nextSibling?.textContent || item.querySelector('link')?.textContent || '#';
-        const pubDate = item.querySelector('pubDate')?.textContent || '';
-        const date = pubDate ? new Date(pubDate).toLocaleDateString('ja-JP', {year:'numeric', month:'short', day:'numeric'}) : '';
+        const date = new Date(item.pubDate).toLocaleDateString('ja-JP', {year:'numeric', month:'short', day:'numeric'});
         return `
-          <a href="${link}" target="_blank" style="display:block; background:#fff; border:1px solid var(--border); border-radius:8px; padding:14px 16px; text-decoration:none; transition:all 0.3s;">
+          <a href="${item.link}" target="_blank" style="display:block; background:#fff; border:1px solid var(--border); border-radius:8px; padding:14px 16px; text-decoration:none; transition:all 0.3s;">
             <p style="font-size:13px; color:var(--text-dim); margin-bottom:4px;">${date}</p>
-            <p style="font-size:14px; font-weight:500; color:var(--text); line-height:1.5;">${title}</p>
+            <p style="font-size:14px; font-weight:500; color:var(--text); line-height:1.5;">${item.title}</p>
           </a>`;
       }).join('');
 
