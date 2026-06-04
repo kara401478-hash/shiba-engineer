@@ -646,8 +646,8 @@
         <div class="skill-card">
           <div class="skill-icon">🌐</div>
           <div class="skill-name">Web構築</div>
-          <div class="skill-desc">WordPressのサイト構築・カスタマイズ。集客できるサイトを作ります。</div>
-          <div class="skill-tags"><span class="tag">WordPress</span><span class="tag">HTML/CSS</span><span class="tag">デザイン</span></div>
+          <div class="skill-desc">WordPressのサイト構築・カスタマイズ。HTMLファイル納品またはリモートでの作業対応。</div>
+          <div class="skill-tags"><span class="tag">WordPress</span><span class="tag">HTML/CSS</span><span class="tag">リモート対応</span></div>
         </div>
         <div class="skill-card">
           <div class="skill-icon">📄</div>
@@ -825,10 +825,15 @@
       <div class="section-label fade-up">Updates</div>
       <h2 class="section-title fade-up">最新情報</h2>
       <div class="fade-up">
-        <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">📝 Latest Blog Posts</p>
-        <div id="blog-feed" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:8px;">
-          <p style="font-size:0.85rem; color:var(--text-dim);">読み込み中...</p>
-        </div>
+        <p style="font-size:0.75rem; letter-spacing:0.15em; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px;">📝 Latest Blog Post</p>
+        <a href="https://nisa-sp500.hatenablog.com" target="_blank" id="latest-post"
+          style="display:block; background:#fff; border:1px solid var(--border); border-radius:8px; padding:1.2rem 1.5rem; text-decoration:none; margin-bottom:12px; transition:all 0.3s;">
+          <p style="font-size:13px; color:var(--text-dim); margin-bottom:4px);" id="latest-date">読み込み中...</p>
+          <p style="font-size:15px; font-weight:500; color:var(--text); line-height:1.5;" id="latest-title"></p>
+        </a>
+        <a href="https://nisa-sp500.hatenablog.com" target="_blank" class="btn btn-contact-outline" style="display:inline-flex;">
+          ブログをもっと読む →
+        </a>
       </div>
     </div>
   </section>
@@ -872,45 +877,35 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // はてなブログRSS取得
+  // はてなブログ最新1記事取得
   const feedUrl = 'https://nisa-sp500.hatenablog.com/rss';
-  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=5`;
+  const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=1`;
 
   fetch(apiUrl)
     .then(r => r.json())
     .then(data => {
-      const container = document.getElementById('blog-feed');
       const items = data.items || [];
-
-      if (!items.length) {
-        container.innerHTML = '<p style="font-size:0.85rem; color:var(--text-dim);">記事が見つかりません</p>';
-        return;
-      }
-
-      container.innerHTML = items.map(item => {
-        const date = new Date(item.pubDate).toLocaleDateString('ja-JP', {year:'numeric', month:'short', day:'numeric'});
-        return `
-          <a href="${item.link}" target="_blank" style="display:block; background:#fff; border:1px solid var(--border); border-radius:8px; padding:14px 16px; text-decoration:none; transition:all 0.3s;">
-            <p style="font-size:13px; color:var(--text-dim); margin-bottom:4px;">${date}</p>
-            <p style="font-size:14px; font-weight:500; color:var(--text); line-height:1.5;">${item.title}</p>
-          </a>`;
-      }).join('');
-
-      container.querySelectorAll('a').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          el.style.borderColor = 'var(--orange)';
-          el.style.transform = 'translateX(4px)';
-          el.style.boxShadow = '0 4px 20px rgba(249,115,22,0.1)';
-        });
-        el.addEventListener('mouseleave', () => {
-          el.style.borderColor = 'var(--border)';
-          el.style.transform = 'translateX(0)';
-          el.style.boxShadow = 'none';
-        });
+      if (!items.length) return;
+      const item = items[0];
+      const date = new Date(item.pubDate).toLocaleDateString('ja-JP', {year:'numeric', month:'short', day:'numeric'});
+      document.getElementById('latest-date').textContent = date;
+      document.getElementById('latest-title').textContent = item.title;
+      document.getElementById('latest-post').href = item.link;
+      document.getElementById('latest-post').addEventListener('mouseenter', () => {
+        document.getElementById('latest-post').style.borderColor = 'var(--orange)';
+        document.getElementById('latest-post').style.transform = 'translateX(4px)';
+        document.getElementById('latest-post').style.boxShadow = '0 4px 20px rgba(249,115,22,0.1)';
+      });
+      document.getElementById('latest-post').addEventListener('mouseleave', () => {
+        document.getElementById('latest-post').style.borderColor = 'var(--border)';
+        document.getElementById('latest-post').style.transform = 'translateX(0)';
+        document.getElementById('latest-post').style.boxShadow = 'none';
       });
     })
     .catch(() => {
-      document.getElementById('blog-feed').innerHTML = '<p style="font-size:0.85rem; color:var(--text-dim);">記事を読み込めませんでした</p>';
+      document.getElementById('latest-date').textContent = '';
+      document.getElementById('latest-title').textContent = 'ブログを読む →';
+    });
     });
 </script>
 </body>
