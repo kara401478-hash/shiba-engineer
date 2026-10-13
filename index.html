@@ -31,95 +31,57 @@
     overflow-x: hidden;
   }
 
-  /* サンセットグラデ背景 */
-  .sunset-hero-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      #ffe8cc 0%,
-      #ffcf99 25%,
-      #ffb366 50%,
-      #ff8c42 75%,
-      #e65c1a 100%
-    );
-    z-index: 0;
-  }
+ /* サンセットグラデ背景 */
+.sunset-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #6b3fa8 0%,
+    #9c5bc4 25%,
+    #e07fc0 50%,
+    #f4a6c6 75%,
+    #ffd9b8 100%
+  );
+  z-index: 0;
+}
 
-  /* 太陽 */
-  .sun {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: radial-gradient(circle, #fff7aa 0%, #ffd700 40%, #ff9900 70%, transparent 100%);
-    border-radius: 50%;
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 80px 40px rgba(255,200,0,0.3);
-    z-index: 1;
-    animation: pulse-sun 4s ease-in-out infinite;
-  }
+/* 太陽 */
+.sun {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #fff7aa 0%, #ffd700 40%, #ff9900 70%, transparent 100%);
+  border-radius: 50%;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 80px 40px rgba(255,200,0,0.3);
+  z-index: 1;
+  animation: pulse-sun 4s ease-in-out infinite;
+}
 
-  @keyframes pulse-sun {
-    0%, 100% { box-shadow: 0 0 80px 40px rgba(255,200,0,0.3); }
-    50% { box-shadow: 0 0 120px 60px rgba(255,200,0,0.5); }
-  }
+/* 海面 */
+.ocean-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #e07fc0 0%, #c15a9e 40%, #4a1f5c 100%);
+  opacity: 0.85;
+}
 
-  /* 海面 */
-  .ocean-layer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 45%;
-    z-index: 2;
-    overflow: hidden;
-  }
-
-  .ocean-fill {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, #ff6b35 0%, #d4380d 40%, #7c2d12 100%);
-    opacity: 0.85;
-  }
-
-  /* 波 */
-  .wave-svg {
-    position: absolute;
-    top: -2px;
-    left: 0;
-    width: 200%;
-    animation: wave-move 8s linear infinite;
-  }
-
-  .wave-svg2 {
-    position: absolute;
-    top: 8px;
-    left: 0;
-    width: 200%;
-    animation: wave-move 12s linear infinite reverse;
-    opacity: 0.5;
-  }
-
-  @keyframes wave-move {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  /* 光の反射 */
-  .reflection {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 60%;
-    background: linear-gradient(180deg, rgba(255,220,100,0.6) 0%, transparent 100%);
-    filter: blur(20px);
-    z-index: 3;
-    animation: shimmer 3s ease-in-out infinite;
-  }
+/* 光の反射 */
+.reflection {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 60%;
+  background: linear-gradient(180deg, rgba(255,220,150,0.6) 0%, transparent 100%);
+  filter: blur(20px);
+  z-index: 3;
+  animation: shimmer 3s ease-in-out infinite;
+}
 
   @keyframes shimmer {
     0%, 100% { width: 80px; opacity: 0.6; }
@@ -274,8 +236,17 @@
   }
 
   /* コンテンツエリア */
-  .content-area {
-    background: var(--bg);
+    .content-area {
+    background: linear-gradient(
+        180deg,
+        #ffd9b8 0%,
+        #fce8d8 8%,
+        #eaf1f5 20%,
+        #cfe8f7 40%,
+        #a9d8f2 60%,
+        #7ec3ec 80%,
+        #5ea8dd 100%
+    );
     position: relative;
     z-index: 10;
   }
